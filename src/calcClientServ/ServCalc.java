@@ -13,6 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -29,14 +30,16 @@ public class ServCalc extends Thread {
     public void run() {
 
         try {
+            while(true){
             System.out.println("Arrancando hilo");
 
             InputStream is = clientSocket.getInputStream();
             OutputStream os = clientSocket.getOutputStream();
 
             //Enviamos mensaje
-            String mensaje = "Introduzca primer digito";
-            os.write(mensaje.getBytes());
+            String mensaje1 = "Introduzca primer digito";
+            os.write(mensaje1.getBytes());
+            os.flush();
 
             //Recibimos mensaje
             byte[] digito = new byte[25];
@@ -44,8 +47,9 @@ public class ServCalc extends Thread {
             System.out.println("Mensaje recibido: " + new String(digito));
 
             //Enviamos mensaje
-            mensaje = "Introduzca el operando a calcular ( * | / | + | - )";
-            os.write(mensaje.getBytes());
+            String mensaje2 = "Introduzca el operando a calcular ( * | / | + | - )";
+            os.write(mensaje2.getBytes());
+            os.flush();
 
             //Recibimos mensaje
             byte[] operando = new byte[1];
@@ -53,8 +57,9 @@ public class ServCalc extends Thread {
             System.out.println("Mensaje recibido: " + new String(operando));
 
             //Enviamos mensaje
-            String mensaje1 = "Introduzca segundo digito";
-            os.write(mensaje1.getBytes());
+            String mensaje3 = "Introduzca segundo digito";
+            os.write(mensaje3.getBytes());
+            os.flush();
 
             //Recibimos mensaje
             byte[] digito2 = new byte[25];
@@ -63,10 +68,12 @@ public class ServCalc extends Thread {
 
             //Enviamos mensaje
             float resultado = calculo(new Float(new String(digito)), new Float(new String(digito2)), new String(operando));
-            mensaje = String.valueOf(resultado);
-            os.write(mensaje.getBytes());
+            String mensaje4 = String.valueOf(resultado);
+            os.write(mensaje4.getBytes());
+            os.flush();
 
             System.out.println("Terminado");
+            }
         } catch (IOException ex) {
             Logger.getLogger(ServCalc.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -81,7 +88,7 @@ public class ServCalc extends Thread {
 
             System.out.println("Realizando el bind");
 
-            InetSocketAddress addr = new InetSocketAddress("localhost", 5555);
+            InetSocketAddress addr = new InetSocketAddress("localhost", Integer.parseInt(JOptionPane.showInputDialog(null, "puerto")));
             serverSocket.bind(addr);
 
             System.out.println("Aceptando conexiones");

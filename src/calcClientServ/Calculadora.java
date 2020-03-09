@@ -12,6 +12,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -479,6 +480,7 @@ public class Calculadora extends javax.swing.JFrame {
             //Enviamos 1º digito
             String digito = texto;
             os.write(digito.getBytes());
+            os.flush();
             System.out.println("Enviando mensaje: " + new String(digito));
             
             //Recibimos mensaje
@@ -489,6 +491,7 @@ public class Calculadora extends javax.swing.JFrame {
             //Enviamos operador
             operando = "*";
             os.write(operando.getBytes());
+            os.flush();
             System.out.println("Enviando mensaje: " + new String(operando));
             
             //guardamos el primer dígito en resultado
@@ -684,7 +687,7 @@ public class Calculadora extends javax.swing.JFrame {
             Socket clienteSocket = new Socket();
             System.out.println("Estableciendo la conexion");
 
-            InetSocketAddress addr = new InetSocketAddress("localhost", 5555);
+            InetSocketAddress addr = new InetSocketAddress(JOptionPane.showInputDialog(null, "host"), Integer.parseInt(JOptionPane.showInputDialog(null, "puerto")));
             clienteSocket.connect(addr);
             InputStream is = clienteSocket.getInputStream();
             OutputStream os = clienteSocket.getOutputStream();
